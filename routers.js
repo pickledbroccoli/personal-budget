@@ -39,8 +39,37 @@ budgetRouter.post('/envelopes', (req, res, next) => {
 });
 
 
+// update a specific envelope by NAME
+budgetRouter.put('/envelopes/:name', (req, res, next) => {
+    const thisIndex = getIndexByName(req.params.name);
+
+    if (thisIndex !== -1) {
+        const thisEnvelope = envelopes[thisIndex];
+        res.status(200).send(thisEnvelope);
+    } else {
+        res.status(404).send(`envelope named ${req.params.name} not found`)
+    }
+});
 
 
+// delete a specific envelope by NAME
+budgetRouter.delete('/envelopes/:name', (req, res, next) => {
+    const thisIndex = getIndexByName(req.params.name);
+    if (thisIndex !== -1) {
+        const thisEnvelope = envelopes[thisIndex];
+
+        // only empty envelopes get to be deleted
+        if (thisEnvelope.balance !== 0) {
+            res.status(400).send('cannot delete envelope with a positive budget')
+        } else {
+            envelopes.splice(thisIndex, 1);
+            res.status(204).send(`envelope ${req.params.name} deleted`);
+        }
+
+    } else {
+        res.status(404).send(`envelope named ${req.params.name} not found`)
+    }
+});
 
 
 module.exports = budgetRouter;
