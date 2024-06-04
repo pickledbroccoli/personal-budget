@@ -48,9 +48,15 @@ const createNewEnvelope = (envelopeName, startingBudget) => {
 };
 
 // to get the index of a certain envelope
-const getIndexById = () => {};
+const getIndexById = (thisId) => {
+    const lookingForThisIndex = envelopes.findIndex((envelope) => envelope.Id === thisId);
+    return lookingForThisIndex;
+};
 
-const getIndexByName = () => {};
+const getIndexByName = (thisName) => {
+    const lookingForThisIndex = envelopes.findIndex((envelope) => envelope.name === thisName);
+    return lookingForThisIndex;
+};
 
 // delete a certain envelope
 const deleteEnvelopeById = () => {};

@@ -1,6 +1,6 @@
 const express = require('express');
 const budgetRouter = express.Router();
-const { envelopes } = require('./db.js');
+const { envelopes, getIndexByName } = require('./db.js');
 const { createNewEnvelope } = require('./db.js');
 
 
@@ -8,6 +8,17 @@ const { createNewEnvelope } = require('./db.js');
 // GET all the envelopes
 budgetRouter.get('/envelopes', (req, res, next) => {
     res.status(200).send(envelopes);
+});
+
+// GET a specific envelope by NAME
+budgetRouter.get('/envelopes/:name', (req, res, next) => {
+    const thisIndex = getIndexByName(req.params.name);
+    if (thisIndex !== -1) {
+        const thisEnvelope = envelopes[thisIndex];
+        res.status(200).send(thisEnvelope);
+    } else {
+        res.status(404).send(`envelope named ${req.params.name} not found`)
+    }
 });
 
 
