@@ -15,12 +15,17 @@ and helper functions to create/delete, and update them
 *
 *
 *-----------------------------------------------------
-*/ */
+*/ 
 
 
 // array to contain the envelope objects
 
-const envelopes = [];
+const envelopes = [
+    {
+        id: 0,
+        name: 'testEnvelope',
+        balance: 102.15
+    }];
 
 
 // some 'global' vars to keep track of important things
@@ -54,4 +59,4 @@ const deleteEnvelopeById = () => {};
 
 
 
-module.exports = { getIndexById, getIndexByName, createNewEnvelope, };
+module.exports = { getIndexById, getIndexByName, createNewEnvelope, envelopes };

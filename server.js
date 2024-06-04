@@ -1,20 +1,22 @@
 const express = require('express');
 const app = express();
-
+const budgetRouter = require('./routers');
+const bodyParser = require('body-parser');
 
 
 module.exports = app;
 
-/*
+
 // test GET route with HelloWorld
 app.get('/', (req, res, next) => {
-    console.log('Hello World');
+   // console.log('Hello World');
     res.send('Hello World');
 });
-*/
 
-const budgetRouter = require('./routers');
-app.use('/budget', budgetRouterRouter);
+
+app.use(bodyParser.json());
+
+app.use('/budget', budgetRouter);
 
 
 
