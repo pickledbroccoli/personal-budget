@@ -62,7 +62,17 @@ const getIndexByName = (thisName) => {
 const deleteEnvelopeById = () => {};
 
 
+// modify balance
+const modifyBalance = (envelope, amount) => {
+    // can deduct only if enough available
+    if (envelope.balance + amount >= 0) {
+        envelope.balance += amount;
+        return true;
+    } else {
+        return false;
+    }
+};
 
 
 
-module.exports = { getIndexById, getIndexByName, createNewEnvelope, envelopes };
+module.exports = { getIndexById, getIndexByName, createNewEnvelope, modifyBalance, envelopes };

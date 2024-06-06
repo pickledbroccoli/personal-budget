@@ -1,6 +1,6 @@
 const express = require('express');
 const budgetRouter = express.Router();
-const { envelopes, getIndexByName } = require('./db.js');
+const { envelopes, getIndexByName, modifyBalance } = require('./db.js');
 const { createNewEnvelope } = require('./db.js');
 
 
@@ -49,6 +49,23 @@ budgetRouter.put('/envelopes/:name', (req, res, next) => {
     } else {
         res.status(404).send(`envelope named ${req.params.name} not found`)
     }
+});
+
+
+// transfer budgets between envelopes (amount in header)
+budgetRouter.post('/envelopes/transfer/:from/:to', (req, res, next) => {
+    // check if amount is available in the first envelope
+    const deductThisAmount = Number(req.header('amount'));
+    const fromIndex = getIndexByName(req.params.from);
+    const toIndex = getIndexByName(req.params.to);
+
+    if (deductThisAmount >=0 && modifyBalance(envelopes[fromIndex], -1 * deductThisAmount)) {
+        modifyBalance(envelopes[toIndex], deductThisAmount);
+        res.status(200).send(`${deductThisAmount} has been transfered from ${req.params.from} to ${req.params.to}`);
+    } else {
+        res.status(400).send('invalid arguments');
+    }
+
 });
 
 
