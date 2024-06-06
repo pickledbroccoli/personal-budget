@@ -40,14 +40,28 @@ budgetRouter.post('/envelopes', (req, res, next) => {
 
 
 // update a specific envelope by NAME
-budgetRouter.put('/envelopes/:name', (req, res, next) => {
-    const thisIndex = getIndexByName(req.params.name);
 
-    if (thisIndex !== -1) {
-        const thisEnvelope = envelopes[thisIndex];
-        res.status(200).send(thisEnvelope);
+// subtract amount from envelope - amount in Headers
+budgetRouter.put('/envelopes/deduct/:name', (req, res, next) => {
+    const thisIndex = getIndexByName(req.params.name);
+    const deductThisAmount = Number(req.header('amount'));
+
+    if (thisIndex !== -1 && deductThisAmount >= 0 && modifyBalance(envelopes[thisIndex], -1 * deductThisAmount)) {
+            res.status(200).send(envelopes[thisIndex]);
     } else {
-        res.status(404).send(`envelope named ${req.params.name} not found`)
+        res.status(404).send(`envelope named ${req.params.name} not found, or balance is insufficient`)
+    }
+});
+
+// add amount to envelope - amount in Headers
+budgetRouter.put('/envelopes/add/:name', (req, res, next) => {
+    const thisIndex = getIndexByName(req.params.name);
+    const addThisAmount = Number(req.header('amount'));
+
+    if (thisIndex !== -1 && addThisAmount >= 0 && modifyBalance(envelopes[thisIndex], addThisAmount)) {
+            res.status(200).send(envelopes[thisIndex]);
+    } else {
+        res.status(404).send(`invalid arguments`)
     }
 });
 
